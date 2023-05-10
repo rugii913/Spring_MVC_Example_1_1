@@ -1,7 +1,9 @@
 package hello.springmvc.basic.request;
 
+import hello.springmvc.basic.HelloData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -118,5 +120,38 @@ public class RequestParamController {
         return "ok";
     }
 
+
+    /**
+     * @ModelAttribute 사용
+     * 참고: model.getAttribute(helloData) 코드도 함께 자동 적용됨, 뒤에 model을 설명할 때 자세히 설명할 것
+     */
+    @ResponseBody
+    @RequestMapping("/model-attribute-v1")
+    //public String modelAttributeV1(@RequestParam String username, @RequestParam int age)
+    public String modelAttributeV1(@ModelAttribute HelloData helloData) {
+
+        //@ModelAttribute로 아래 과정을 완전 자동화할 수 있다.
+//        HelloData data = new HelloData();
+//        data.setUsername(username);
+//        data.setAge(age);
+
+        log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
+        log.info("helloData={}", helloData);
+        return "ok";
+    }
+
+    /**
+     * @ModelAttribute 생략 가능
+     * String, int 같은 단순 타입 -> @RequestParam
+     * 단순 타입이 아닌 것 -> @ModelAttribute (단 argument resolver에서 지정된 타입은 제외 ex.HttpServletRequest)
+     */
+    @ResponseBody
+    @RequestMapping("/model-attribute-v2")
+    public String modelAttributeV2(HelloData helloData) {
+
+        log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
+        log.info("helloData={}", helloData);
+        return "ok";
+    }
 
 }
